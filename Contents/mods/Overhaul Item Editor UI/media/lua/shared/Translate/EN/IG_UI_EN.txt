@@ -1,0 +1,4 @@
+IG_UI_EN = {
+	IGUI_ItemEditor_UseDelta = "Use Delta",
+	IGUI_ItemEditor_UseDeltaTooltip = "0 mean nothing, 1 mean all",
+}

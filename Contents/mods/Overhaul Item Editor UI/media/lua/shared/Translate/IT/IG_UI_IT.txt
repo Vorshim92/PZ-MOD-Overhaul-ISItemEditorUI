@@ -1,0 +1,4 @@
+IG_UI_IT = {
+	IGUI_ItemEditor_UseDelta = "Utilizzo Delta",
+	IGUI_ItemEditor_UseDeltaTooltip = "0 significa niente consumo, 1 significa che consuma tutto",
+}
