@@ -1,4 +1,8 @@
 IG_UI_IT = {
 	IGUI_ItemEditor_UseDelta = "Utilizzo Delta",
 	IGUI_ItemEditor_UseDeltaTooltip = "0 significa niente consumo, 1 significa che consuma tutto",
+	IGUI_ItemEditor_RemainingUses = "Utilizzi rimanenti",
+	IGUI_ItemEditor_remainingUsesTooltip  = "Quante volte l'oggetto puo' essere usato",
+	IGUI_ItemEditor_TotalUses = "Utilizzi totali",
+	IGUI_ItemEditor_TotalUsesTooltip  = "Quante volte l'oggetto puo' essere usato quando e' pieno",
 }

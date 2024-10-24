@@ -1,4 +1,8 @@
 IG_UI_EN = {
 	IGUI_ItemEditor_UseDelta = "Use Delta",
 	IGUI_ItemEditor_UseDeltaTooltip = "0 mean nothing, 1 mean all",
+	IGUI_ItemEditor_RemainingUses = "Remaining Uses",
+	IGUI_ItemEditor_remainingUsesTooltip  = "How many times the item can be used",
+	IGUI_ItemEditor_TotalUses = "Total Uses",
+	IGUI_ItemEditor_TotalUsesTooltip  = "How many times the item can be used if is fulled",
 }

@@ -32,6 +32,24 @@ function ISItemEditorUI:create()
         self.useDelta.max = 1;
         self.useDelta:setOnlyNumbers(true);
         self:addChild(self.useDelta);
+
+        -- y = y + entryHgt;
+
+        self.remainingUses = ISTextEntryBox:new(self.item:getRemainingUses() .. "", 10, y, numberWidth, entryHgt);
+        self.remainingUses.tooltip = getText("IGUI_ItemEditor_remainingUsesTooltip");
+        self.remainingUses:initialise();
+        self.remainingUses:instantiate();
+        self.useDelta.min = 0;
+        self.useDelta.max = luautils.round(1/self.item:getUseDelta());
+        self.remainingUses:setOnlyNumbers(true)
+        self:addChild(self.remainingUses);
+
+        self.totalUses = ISTextEntryBox:new(luautils.round(1/self.item:getUseDelta()) .. "", 10, y, numberWidth, entryHgt);
+        self.totalUses.tooltip = getText("IGUI_ItemEditor_TotalUsesTooltip");
+        self.totalUses:initialise();
+        self.totalUses:instantiate();
+        self.totalUses:setOnlyNumbers(true)
+        self:addChild(self.totalUses);
     end
     self:setHeight(preHeight + y)
 end
@@ -70,18 +88,31 @@ function ISItemEditorUI:prerender()
             y = y + dy
         end
     end
+    if self.isDrainable then
+        local x = self.usedDelta:getX()+55
+        self:drawText("--> " .. getText("IGUI_ItemEditor_RemainingUses") .. ":", x, y, 1,1,1,1, UIFont.Small);
+        local newx = x + getTextManager():MeasureStringX(UIFont.Small, "--> " .. getText("IGUI_ItemEditor_RemainingUses") .. ":") + 10
+        self.remainingUses:setY(y);
+        self.remainingUses:setX(newx);
 
-    if self.isDrainable then
         y = y + dy; -- usedDelta
-    end
-    
-    if self.isDrainable then
+
         self:drawText(getText("IGUI_ItemEditor_UseDelta") .. ":", 5, y, 1,1,1,1, UIFont.Small);
         self.useDelta:setY(y);
         if splitPt < getTextManager():MeasureStringX(UIFont.Small, getText  ("IGUI_ItemEditor_UseDelta")) + 10 then
             splitPt = getTextManager():MeasureStringX(UIFont.Small, getText ("IGUI_ItemEditor_UseDelta")) + 10;
         end
         self.useDelta:setX(splitPt);
+
+        x = self.useDelta:getX()+55
+        self:drawText("--> " .. getText("IGUI_ItemEditor_TotalUses") .. ":", x, y, 1,1,1,1, UIFont.Small);
+        newx = x + getTextManager():MeasureStringX(UIFont.Small, "--> " .. getText("IGUI_ItemEditor_TotalUses") .. ":") + 10
+        self.totalUses:setY(y);
+        self.totalUses:setX(newx);
+
+        -- y = y + dy;
+
+        
     end
 end
 
@@ -91,10 +122,35 @@ function ISItemEditorUI:onOptionMouseDown(button, x, y)
     original_ISItemEditorUI_onOptionMouseDown(self, button, x, y)
     if button.internal == "SAVE" then
         if self.isDrainable then
-            if isAdminLogs then
-                sendClientCommand(getPlayer(), 'ISLogSystem', 'writeLog', {loggerName = "itemEdits", logText = "[Buffy Logs] ITEM EDITED! "..getOnlineUsername().." changed useDelta "..luautils.round(self.item:getUseDelta(),3).." -> "..self.useDelta:getInternalText()})
+            local totalUsesInput = tonumber(string.trim(self.totalUses:getInternalText()))
+            local useDeltaInput = tonumber(string.trim(self.useDelta:getInternalText()))
+            local remainingUsesInput = tonumber(string.trim(self.remainingUses:getInternalText()))
+            local currentUseDelta = self.item:getUseDelta()
+
+            -- if you changed totalUses or useDelta inputs fields, TotalUses has the priority over UseDelta, just to avoid overwrite problems.
+            if totalUsesInput and luautils.round(1 / currentUseDelta) ~= totalUsesInput then
+                currentUseDelta = 1 / totalUsesInput
+                if isAdminLogs then
+                    sendClientCommand(getPlayer(), 'ISLogSystem', 'writeLog', {loggerName = "itemEdits", logText = "[Buffy Logs] ITEM EDITED! "..getOnlineUsername().." changed totalUses " .. luautils.round(1 / currentUseDelta) .. " -> " .. totalUsesInput})
+                    self.item:setUseDelta(currentUseDelta)
+                    useDeltaInput = currentUseDelta
+                end
+            elseif useDeltaInput and luautils.round(currentUseDelta, 3) ~= useDeltaInput then
+                if isAdminLogs then
+                    sendClientCommand(getPlayer(), 'ISLogSystem', 'writeLog', {loggerName = "itemEdits", logText = "[Buffy Logs] ITEM EDITED! "..getOnlineUsername().." changed useDelta " .. luautils.round(currentUseDelta, 3) .. " -> " .. useDeltaInput})
+                end
+                currentUseDelta = useDeltaInput
+                self.item:setUseDelta(currentUseDelta)
             end
-            self.item:setUseDelta(tonumber(string.trim(self.useDelta:getInternalText())));
+
+            
+            -- Gestisci 'RemainingUses'
+            if remainingUsesInput and self.item:getRemainingUses() ~= remainingUsesInput then
+                if isAdminLogs then
+                    sendClientCommand(getPlayer(), 'ISLogSystem', 'writeLog', {loggerName = "itemEdits", logText = "[Buffy Logs] ITEM EDITED! "..getOnlineUsername().." changed remainingUses "..self.item:getRemainingUses().." -> "..remainingUsesInput})
+                end
+                self.item:setUsedDelta(currentUseDelta * remainingUsesInput)
+            end
         end
     end
 end
