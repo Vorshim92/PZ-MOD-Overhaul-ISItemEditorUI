@@ -64,15 +64,15 @@ function ISItemEditorUI:prerender()
     local dy = self.dy or (FONT_HGT_SMALL + 2 * 2)
     local y = 20;
 
-    y = y + 30; -- Titolo
-    y = y + 30; -- Tipo di oggetto
+    y = y + 30; -- Title
+    y = y + 30; -- Object type
 
-    y = y + dy; -- Nome
-    y = y + dy; -- Peso
-    y = y + dy; -- Condizione
+    y = y + dy; -- Name
+    y = y + dy; -- Weight
+    y = y + dy; -- Condition
 
     if self.color:isVisible() then
-        y = y + dy; -- Colore
+        y = y + dy; -- Color
     end
 
     if self.isWeapon then
@@ -144,7 +144,7 @@ function ISItemEditorUI:onOptionMouseDown(button, x, y)
             end
 
             
-            -- Gestisci 'RemainingUses'
+            -- Handle 'RemainingUses'
             if remainingUsesInput and self.item:getRemainingUses() ~= remainingUsesInput then
                 if isAdminLogs then
                     sendClientCommand(getPlayer(), 'ISLogSystem', 'writeLog', {loggerName = "itemEdits", logText = "[Buffy Logs] ITEM EDITED! "..getOnlineUsername().." changed remainingUses "..self.item:getRemainingUses().." -> "..remainingUsesInput})
