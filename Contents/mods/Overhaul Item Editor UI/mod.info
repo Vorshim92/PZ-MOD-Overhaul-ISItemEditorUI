@@ -1,4 +1,4 @@
 name=Overhaul Item Editor
 id=overhaulitemeditor
-description=This is an example mod containing two maps.
+description=this mod improve ISItemEditor with new stuff. For now just useDelta (and Total and Remaining Uses) for DrainableItems
 poster=poster.png

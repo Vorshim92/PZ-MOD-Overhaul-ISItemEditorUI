@@ -1,6 +1,6 @@
 version=1
-id=
-title=Template
-description=description
-tags=Build 41;
+id=3353426056
+title=Overhaul Item Editor UI
+description=this mod improve ISItemEditor with new stuff. For now just useDelta (and Total and Remaining Uses) for DrainableItems
+tags=Build 41
 visibility=public
